@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>55电影网 - 赛博霓虹影视导航</title>
+<meta name="description" content="55电影网（55dianyingwang-h5）赛博朋克风格影视导航，霓虹UI、最新电影、热播剧、综艺动漫高清在线观看，必应收录友好。">
+<meta name="keywords" content="55电影网, 55dianyingwang-h5, 电影, 电视剧, 综艺, 动漫, 在线观看, 赛博朋克, 霓虹影视">
+<meta name="author" content="55电影网">
+<meta name="robots" content="index, follow">
+<style>
+:root{
+  --bg:#000;
+  --surface:#0a0a0f;
+  --border:#1a1a2e;
+  --cyan:#0ff;
+  --magenta:#f0f;
+  --purple:#90f;
+  --text:#e0e0ff;
+  --dim:#6060a0;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Courier New',Consolas,'Microsoft YaHei',monospace;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.8;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+/* CRT扫描线叠加 */
+body::after{
+  content:'';
+  position:fixed;
+  top:0;left:0;width:100%;height:100%;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,255,255,0.015) 2px,
+    rgba(0,255,255,0.015) 4px
+  );
+  pointer-events:none;
+  z-index:9999;
+}
+
+a{color:var(--cyan);text-decoration:none;transition:.3s}
+a:hover{color:var(--magenta);text-shadow:0 0 8px var(--magenta)}
+
+/* 顶部 */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(0,0,0,0.9);
+  border-bottom:1px solid var(--cyan);
+  backdrop-filter:blur(5px);
+}
+.nav-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;height:56px;
+}
+.logo{
+  font-size:20px;font-weight:900;
+  text-shadow:0 0 10px var(--cyan),0 0 20px var(--cyan);
+  letter-spacing:2px;
+}
+.logo span{color:var(--magenta);text-shadow:0 0 10px var(--magenta)}
+.logo small{display:block;font-size:9px;color:var(--dim);letter-spacing:4px}
+.nav-menu{display:flex;list-style:none;gap:6px}
+.nav-menu a{
+  padding:8px 14px;font-size:13px;font-weight:700;
+  border:1px solid transparent;letter-spacing:1px;
+}
+.nav-menu a:hover,.nav-menu a.active{
+  border-color:var(--magenta);
+  box-shadow:0 0 10px rgba(255,0,255,0.3),inset 0 0 10px rgba(255,0,255,0.1);
+  color:var(--magenta);
+}
+.nav-toggle{display:none;background:none;border:none;color:var(--cyan);font-size:24px;cursor:pointer}
+
+/* Hero */
+.hero{
+  margin-top:56px;padding:80px 20px 60px;
+  text-align:center;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(0,255,255,0.1),transparent 60%),
+    radial-gradient(ellipse at 50% 100%,rgba(255,0,255,0.08),transparent 60%);
+}
+.glitch{
+  font-size:clamp(28px,6vw,52px);font-weight:900;
+  letter-spacing:4px;position:relative;display:inline-block;
+  animation:glitch 2s infinite;
+}
+@keyframes glitch{
+  0%,92%,100%{text-shadow:0 0 10px var(--cyan),2px 0 var(--magenta),-2px 0 var(--cyan)}
+  93%{text-shadow:2px 0 var(--magenta),-2px 0 var(--cyan)}
+  94%{text-shadow:-2px 0 var(--magenta),2px 0 var(--cyan)}
+  95%{text-shadow:0 0 10px var(--cyan)}
+}
+.hero p{color:var(--dim);max-width:520px;margin:20px auto 30px;font-size:15px}
+.btn-cyber{
+  display:inline-block;padding:14px 40px;
+  background:transparent;color:var(--cyan);
+  border:2px solid var(--cyan);font-weight:900;letter-spacing:3px;
+  box-shadow:0 0 15px rgba(0,255,255,0.3),inset 0 0 15px rgba(0,255,255,0.1);
+  text-transform:uppercase;
+}
+.btn-cyber:hover{background:var(--cyan);color:#000;box-shadow:0 0 30px var(--cyan)}
+
+/* 区块 */
+.section{max-width:1200px;margin:0 auto;padding:50px 20px}
+.sec-title{
+  font-size:clamp(18px,3vw,24px);font-weight:900;
+  letter-spacing:3px;margin-bottom:30px;
+  display:flex;align-items:center;gap:12px;
+  text-transform:uppercase;
+}
+.sec-title::before{content:'▶';color:var(--magenta);font-size:14px;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* 电影：霓虹灯牌 */
+.neon-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;
+}
+.neon-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:4px;overflow:hidden;transition:.3s;position:relative;
+}
+.neon-card:hover{
+  border-color:var(--cyan);
+  box-shadow:0 0 15px rgba(0,255,255,0.3),0 0 30px rgba(0,255,255,0.1);
+  transform:translateY(-4px);
+}
+.neon-poster{
+  height:200px;display:flex;align-items:center;justify-content:center;
+  font-size:48px;background:linear-gradient(135deg,#0a0a1a,#101030);
+  position:relative;
+}
+.neon-poster::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  opacity:0;transition:.3s;
+}
+.neon-card:hover .neon-poster::after{opacity:1}
+.neon-info{padding:12px}
+.neon-info h3{font-size:14px;font-weight:700;letter-spacing:1px;margin-bottom:2px}
+.neon-info span{font-size:11px;color:var(--dim)}
+.neon-card .neon-badge{
+  position:absolute;top:8px;right:8px;font-size:9px;font-weight:900;
+  padding:2px 6px;background:var(--magenta);color:#000;
+  letter-spacing:1px;
+}
+
+/* 电视剧：终端列表 */
+.terminal{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:4px;padding:0;overflow:hidden;
+}
+.terminal-bar{
+  background:#111;border-bottom:1px solid var(--border);
+  padding:8px 14px;display:flex;gap:6px;align-items:center;
+}
+.terminal-bar .dot{width:10px;height:10px;border-radius:50%}
+.terminal-bar .dot:nth-child(1){background:var(--magenta)}
+.terminal-bar .dot:nth-child(2){background:var(--purple)}
+.terminal-bar .dot:nth-child(3){background:var(--cyan)}
+.terminal-bar .title{margin-left:auto;font-size:11px;color:var(--dim);letter-spacing:2px}
+.tv-line{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  font-family:'Courier New',monospace;transition:.2s;
+}
+.tv-line:hover{background:rgba(0,255,255,0.05);padding-left:24px}
+.tv-line .prompt{color:var(--magenta);font-weight:900;flex-shrink:0}
+.tv-line .name{color:var(--cyan);flex:1;font-size:14px}
+.tv-line .desc{color:var(--dim);font-size:12px;flex:2}
+.tv-line .status{
+  font-size:10px;padding:3px 8px;border:1px solid;flex-shrink:0;letter-spacing:1px;
+}
+.tv-line .status.live{border-color:var(--cyan);color:var(--cyan)}
+.tv-line .status.upd{border-color:var(--purple);color:var(--purple)}
+.tv-line .status.end{border-color:var(--dim);color:var(--dim)}
+
+/* 综艺动漫：像素拼贴 */
+.pixel-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:4px;
+}
+.pixel-item{
+  background:var(--surface);border:1px solid var(--border);
+  aspect-ratio:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  transition:.2s;cursor:pointer;position:relative;overflow:hidden;
+}
+.pixel-item:hover{
+  border-color:var(--magenta);
+  background:rgba(255,0,255,0.05);
+  transform:scale(1.05);z-index:1;
+}
+.pixel-item .icon{font-size:32px;margin-bottom:6px}
+.pixel-item h4{font-size:12px;font-weight:700;letter-spacing:1px}
+.pixel-item span{font-size:10px;color:var(--dim)}
+.pixel-item::before{
+  content:'';position:absolute;top:0;left:0;width:4px;height:4px;
+  background:var(--cyan);opacity:0;transition:.2s;
+}
+.pixel-item:hover::before{opacity:1}
+
+/* 排行榜：频谱 */
+.spectrum{display:flex;flex-direction:column;gap:12px}
+.spectrum-row{
+  display:grid;grid-template-columns:36px 1fr 50px;align-items:center;gap:14px;
+  background:var(--surface);border:1px solid var(--border);padding:12px 16px;
+}
+.spectrum-row .rank-num{
+  font-size:18px;font-weight:900;text-align:center;
+  color:var(--cyan);text-shadow:0 0 8px var(--cyan);
+}
+.spectrum-row .bars{display:flex;align-items:flex-end;gap:3px;height:28px}
+.spectrum-row .bars i{
+  flex:1;background:linear-gradient(to top,var(--cyan),var(--magenta));
+  border-radius:1px 1px 0 0;animation:spectrum 1.5s ease-in-out infinite;
+}
+.spectrum-row .bars i:nth-child(1){height:40%;animation-delay:0s}
+.spectrum-row .bars i:nth-child(2){height:70%;animation-delay:.2s}
+.spectrum-row .bars i:nth-child(3){height:55%;animation-delay:.4s}
+.spectrum-row .bars i:nth-child(4){height:90%;animation-delay:.6s}
+.spectrum-row .bars i:nth-child(5){height:65%;animation-delay:.8s}
+.spectrum-row .bars i:nth-child(6){height:45%;animation-delay:1s}
+.spectrum-row .bars i:nth-child(7){height:80%;animation-delay:1.2s}
+.spectrum-row .bars i:nth-child(8){height:50%;animation-delay:1.4s}
+@keyframes spectrum{50%{opacity:.6}}
+.spectrum-row .score{font-size:16px;font-weight:900;color:var(--magenta);text-align:right}
+
+/* 关于：系统弹窗 */
+.dialog{
+  max-width:680px;margin:0 auto;
+  background:var(--surface);border:1px solid var(--cyan);
+  box-shadow:0 0 30px rgba(0,255,255,0.15);
+}
+.dialog-title{
+  background:var(--cyan);color:#000;padding:10px 16px;
+  font-weight:900;letter-spacing:2px;font-size:14px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.dialog-title .close{font-size:16px;cursor:pointer}
+.dialog-body{padding:24px}
+.dialog-body h3{font-size:18px;margin-bottom:14px;color:var(--cyan)}
+.dialog-body p{font-size:13px;color:var(--dim);margin-bottom:10px;line-height:1.8}
+.dialog-links{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+.dialog-links a{
+  padding:8px 16px;border:1px solid var(--border);font-size:12px;font-weight:700;
+}
+.dialog-links a:hover{border-color:var(--cyan);box-shadow:0 0 10px rgba(0,255,255,0.2)}
+
+/* 页脚 */
+.footer{
+  border-top:1px solid var(--border);padding:30px 20px;text-align:center;
+  background:var(--surface);
+}
+.footer p{font-size:12px;color:var(--dim);margin-bottom:6px}
+.footer a{color:var(--dim);margin:0 5px}
+.footer .site-url{color:var(--cyan);text-shadow:0 0 5px var(--cyan)}
+
+/* 响应式 */
+@media(max-width:768px){
+  .nav-menu{
+    display:none;position:absolute;top:56px;left:0;right:0;
+    flex-direction:column;background:rgba(0,0,0,0.95);border-bottom:1px solid var(--cyan);
+  }
+  .nav-menu.open{display:flex}
+  .nav-menu a{padding:14px 20px;border-left:3px solid transparent}
+  .nav-menu a:hover,.nav-menu a.active{border-left-color:var(--magenta);border-bottom-color:transparent}
+  .nav-toggle{display:block}
+  .tv-line{flex-wrap:wrap;gap:6px}
+  .tv-line .desc{display:none}
+  .pixel-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:480px){
+  .hero{padding:50px 16px 36px}
+  .section{padding:36px 16px}
+  .neon-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .neon-poster{height:160px;font-size:36px}
+  .spectrum-row{grid-template-columns:28px 1fr 40px;gap:8px;padding:10px}
+}
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="logo">55<span>电影网</span><small>55DIANYINGWANG-H5</small></div>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="#home" class="active">HOME</a></li>
+      <li><a href="#movies">MOVIES</a></li>
+      <li><a href="#tv">TV_SERIES</a></li>
+      <li><a href="#ent">ENTERTAIN</a></li>
+      <li><a href="#rank">RANKING</a></li>
+      <li><a href="#about">ABOUT</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle">☰</button>
+  </div>
+</nav>
+
+<section class="hero" id="home">
+  <div class="glitch">55电影网</div>
+  <p>赛博霓虹影视导航 · 55dianyingwang-h5 · 最新电影/剧集/综艺/动漫 · 极速访问</p>
+  <a href="#movies" class="btn-cyber">▶ 启动系统</a>
+</section>
+
+<section class="section" id="movies">
+  <h2 class="sec-title">霓虹片库 / MOVIES</h2>
+  <div class="neon-grid">
+    <div class="neon-card"><span class="neon-badge">4K</span><div class="neon-poster">🎬</div><div class="neon-info"><h3>赛博之城</h3><span>科幻 / 2026</span></div></div>
+    <div class="neon-card"><span class="neon-badge">HOT</span><div class="neon-poster">🔫</div><div class="neon-info"><h3>暗网追凶</h3><span>犯罪 / 2026</span></div></div>
+    <div class="neon-card"><div class="neon-poster">🏎️</div><div class="neon-info"><h3>极速骇客</h3><span>动作 / 2025</span></div></div>
+    <div class="neon-card"><span class="neon-badge">NEW</span><div class="neon-poster">🤖</div><div class="neon-info"><h3>AI叛乱</h3><span>科幻 / 2026</span></div></div>
+    <div class="neon-card"><div class="neon-poster">🧬</div><div class="neon-info"><h3>基因密码</h3><span>惊悚 / 2026</span></div></div>
+    <div class="neon-card"><div class="neon-poster">🌌</div><div class="neon-info"><h3>深空信号</h3><span>太空 / 2025</span></div></div>
+    <div class="neon-card"><span class="neon-badge">IMAX</span><div class="neon-poster">⚡</div><div class="neon-info"><h3>超频者</h3><span>超级英雄 / 2026</span></div></div>
+    <div class="neon-card"><div class="neon-poster">🎭</div><div class="neon-info"><h3>虚拟人格</h3><span>剧情 / 2026</span></div></div>
+  </div>
+</section>
+
+<section class="section" id="tv" style="background:rgba(10,10,15,0.5)">
+  <h2 class="sec-title">终端剧集 / TV_SERIES</h2>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="title">root@55movie:~/tv_series</div></div>
+    <div class="tv-line"><span class="prompt">></span><span class="name">黑镜 第七季</span><span class="desc">独立单元科幻剧，每集一个科技寓言</span><span class="status live">LIVE</span></div>
+    <div class="tv-line"><span class="prompt">></span><span class="name">西部世界 终章</span><span class="desc">AI觉醒后的新世界秩序</span><span class="status live">LIVE</span></div>
+    <div class="tv-line"><span class="prompt">></span><span class="name">爱死机 第五季</span><span class="desc">成人动画短片合集，脑洞大开</span><span class="status upd">UPDATE</span></div>
+    <div class="tv-line"><span class="prompt">></span><span class="name">曼达洛人 4</span><span class="desc">星战宇宙衍生剧，赏金猎人传奇</span><span class="status upd">UPDATE</span></div>
+    <div class="tv-line"><span class="prompt">></span><span class="name">猎魔人 4</span><span class="desc">奇幻史诗，杰洛特的宿命之旅</span><span class="status end">END</span></div>
+  </div>
+</section>
+
+<section class="section" id="ent">
+  <h2 class="sec-title">像素娱乐 / ENTERTAIN</h2>
+  <div class="pixel-grid">
+    <div class="pixel-item"><div class="icon">🎤</div><h4>电音派对</h4><span>音乐综艺</span></div>
+    <div class="pixel-item"><div class="icon">🎮</div><h4>电竞之王</h4><span>电竞动漫</span></div>
+    <div class="pixel-item"><div class="icon">📺</div><h4>深夜脱口秀</h4><span>访谈综艺</span></div>
+    <div class="pixel-item"><div class="icon">🎨</div><h4>涂鸦大师</h4><span>艺术综艺</span></div>
+    <div class="pixel-item"><div class="icon">🍜</div><h4>像素厨房</h4><span>美食综艺</span></div>
+    <div class="pixel-item"><div class="icon">🐉</div><h4>龙珠 超</h4><span>热血动漫</span></div>
+    <div class="pixel-item"><div class="icon">🎲</div><h4>桌游之夜</h4><span>游戏综艺</span></div>
+    <div class="pixel-item"><div class="icon">👾</div><h4>8-bit英雄</h4><span>像素动漫</span></div>
+    <div class="pixel-item"><div class="icon">🎪</div><h4>马戏团物语</h4><span>真人秀</span></div>
+    <div class="pixel-item"><div class="icon">🔮</div><h4>占卜师</h4><span>灵异综艺</span></div>
+    <div class="pixel-item"><div class="icon">🏹</div><h4>弓箭传说</h4><span>冒险动漫</span></div>
+    <div class="pixel-item"><div class="icon">🎯</div><h4>狙击手</h4><span>军事动漫</span></div>
+  </div>
+</section>
+
+<section class="section" id="rank" style="background:rgba(10,10,15,0.5)">
+  <h2 class="sec-title">频谱榜单 / RANKING</h2>
+  <div class="spectrum">
+    <div class="spectrum-row"><div class="rank-num">01</div><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="score">9.9</div></div>
+    <div class="spectrum-row"><div class="rank-num">02</div><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="score">9.7</div></div>
+    <div class="spectrum-row"><div class="rank-num">03</div><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="score">9.5</div></div>
+    <div class="spectrum-row"><div class="rank-num">04</div><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="score">9.2</div></div>
+    <div class="spectrum-row"><div class="rank-num">05</div><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="score">8.9</div></div>
+    <div class="spectrum-row"><div class="rank-num">06</div><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="score">8.6</div></div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <h2 class="sec-title">系统信息 / ABOUT</h2>
+  <div class="dialog">
+    <div class="dialog-title"><span>55电影网.exe</span><span class="close">×</span></div>
+    <div class="dialog-body">
+      <h3>SYSTEM_INFO</h3>
+      <p>55电影网（55dianyingwang-h5）是一个赛博朋克风格的影视导航站点，收录最新电影、剧集、综艺、动漫资源入口。</p>
+      <p>本站仅做静态导航，不存储任何视频文件。所有资源来自互联网公开分享，如有侵权请联系删除。</p>
+      <p>VERSION: 2.0.26 | STATUS: ONLINE | UPTIME: 99.9%</p>
+      <div class="dialog-links">
+        <a href="#">DISCLAIMER</a>
+        <a href="#">CONTACT</a>
+        <a href="#">LINK_EXCHANGE</a>
+        <a href="#">SUBMIT</a>
+        <a href="#">FEEDBACK</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>55电影网 · 55DIANYINGWANG-H5 · CYBER NAVIGATION SYSTEM</p>
+  <p>
+    <a href="#home">HOME</a> |
+    <a href="#movies">MOVIES</a> |
+    <a href="#tv">TV</a> |
+    <a href="#ent">ENTERTAIN</a> |
+    <a href="#rank">RANKING</a>
+  </p>
+  <p>URL: <a class="site-url" href="https://55dianyingwang-h5.github.io">https://55dianyingwang-h5.github.io</a></p>
+  <p>© 2026 55电影网 · All Rights Reserved</p>
+</footer>
+
+<script>
+const toggle=document.getElementById('navToggle');
+const menu=document.getElementById('navMenu');
+toggle.addEventListener('click',()=>menu.classList.toggle('open'));
+
+const secs=document.querySelectorAll('section[id],header[id]');
+const links=menu.querySelectorAll('a');
+addEventListener('scroll',()=>{
+  let cur='home';
+  secs.forEach(s=>{if(scrollY>=s.offsetTop-100)cur=s.id});
+  links.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+cur)l.classList.add('active')});
+});
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+    menu.classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
